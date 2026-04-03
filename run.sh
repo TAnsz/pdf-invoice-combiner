@@ -1,0 +1,1 @@
+Remove-Item -LiteralPath 'merged.pdf' -Force -ErrorAction SilentlyContinue; & 'D:/Code/pdf/.venv/Scripts/python.exe' 'd:/Code/pdf/combine_pdfs_two_per_a4.py' 'D:\tmp\发票'
