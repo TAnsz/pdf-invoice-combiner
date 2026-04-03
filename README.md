@@ -17,7 +17,7 @@
 
 ```bash
 # 克隆或下载本项目
-git clone https://github.com/your-username/pdf-invoice-combiner.git
+git clone https://github.com/TAnsz/pdf-invoice-combiner.git
 cd pdf-invoice-combiner
 
 # 创建虚拟环境（推荐）
@@ -35,7 +35,7 @@ python combine_pdfs_two_per_a4.py
 
 ### 方式 2：独立 EXE（Windows，无需 Python）
 
-从 [Releases](https://github.com/your-username/pdf-invoice-combiner/releases) 页面下载最新的 `combine_pdfs.exe`，双击运行或在命令行中使用。
+从 [Releases](https://github.com/TAnsz/pdf-invoice-combiner/releases) 页面下载最新的 `combine_pdfs.exe`，双击运行或在命令行中使用。
 
 ## 使用方法
 

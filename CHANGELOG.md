@@ -44,7 +44,7 @@
 
 欢迎提交 Issue 和 Pull Request！
 
-如果你发现了 bug 或有新功能建议，请在 [Issues](https://github.com/your-username/pdf-invoice-combiner/issues) 中提出。
+如果你发现了 bug 或有新功能建议，请在 [Issues](https://github.com/TAnsz/pdf-invoice-combiner/issues) 中提出。
 
 ---
 

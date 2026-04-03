@@ -13,7 +13,7 @@
 3. **遇到问题**: [README.md#故障排除](README.md#故障排除) - FAQ
 
 **下载方式**：
-- Windows 用户：从 [Releases](https://github.com/your-username/pdf-invoice-combiner/releases) 下载 EXE
+- Windows 用户：从 [Releases](https://github.com/TAnsz/pdf-invoice-combiner/releases) 下载 EXE
 - 开发者：`git clone` 项目后 `pip install -r requirements.txt`
 
 ---
@@ -147,9 +147,9 @@ README.md → 修改代码 → build_exe.ps1 → GITHUB_UPLOAD.md → 发布
 
 ## 🔗 外部链接
 
-- **GitHub 仓库**: https://github.com/your-username/pdf-invoice-combiner
-- **Releases 页面**: https://github.com/your-username/pdf-invoice-combiner/releases
-- **Issues 页面**: https://github.com/your-username/pdf-invoice-combiner/issues
+- **GitHub 仓库**: https://github.com/TAnsz/pdf-invoice-combiner
+- **Releases 页面**: https://github.com/TAnsz/pdf-invoice-combiner/releases
+- **Issues 页面**: https://github.com/TAnsz/pdf-invoice-combiner/issues
 - **PyMuPDF 文档**: https://pymupdf.readthedocs.io/
 - **Python 官网**: https://www.python.org/
 

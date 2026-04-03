@@ -59,7 +59,7 @@
 
 1. **README.md** - 搜索并替换 `your-username`：
    ```
-   https://github.com/your-username/pdf-invoice-combiner
+   https://github.com/TAnsz/pdf-invoice-combiner
    ```
    替换为你的实际 GitHub 用户名
 
@@ -67,7 +67,7 @@
    ```python
    author="Your Name",
    author_email="your.email@example.com",
-   url="https://github.com/your-username/pdf-invoice-combiner",
+   url="https://github.com/TAnsz/pdf-invoice-combiner",
    ```
 
 3. **QUICKSTART.md** - 如果有自定义需要，更新示例链接
@@ -88,7 +88,7 @@ git add .
 git commit -m "Initial commit: PDF invoice combiner with auto-merge and crop features"
 
 # 5. 添加远程仓库
-git remote add origin https://github.com/your-username/pdf-invoice-combiner.git
+git remote add origin https://github.com/TAnsz/pdf-invoice-combiner.git
 
 # 6. 重命名主分支
 git branch -M main
@@ -103,7 +103,7 @@ git push origin v1.0.0
 
 ## ✅ 上传后验证
 
-1. 访问 `https://github.com/your-username/pdf-invoice-combiner`
+1. 访问 `https://github.com/TAnsz/pdf-invoice-combiner`
 2. 验证所有文件已上传
 3. 检查 README.md 渲染正确
 4. 确认 Releases 页面显示 v1.0.0

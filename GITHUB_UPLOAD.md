@@ -25,7 +25,7 @@ git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 
 # 添加远程仓库（替换为你的仓库地址）
-git remote add origin https://github.com/your-username/pdf-invoice-combiner.git
+git remote add origin https://github.com/TAnsz/pdf-invoice-combiner.git
 ```
 
 ## 3. 提交和推送代码
@@ -48,7 +48,7 @@ git push -u origin main
 
 ### 通过 GitHub 网页界面：
 
-1. 访问 https://github.com/your-username/pdf-invoice-combiner
+1. 访问 https://github.com/TAnsz/pdf-invoice-combiner
 2. 右侧找到 `Releases` 或点击 `Create a release`
 3. 点击 `Draft a new release`
 4. **Tag version**: `v1.0.0`

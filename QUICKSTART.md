@@ -4,7 +4,7 @@
 
 ### 方式 1：使用 EXE（推荐 Windows 用户）
 
-1. 从 [Releases](https://github.com/your-username/pdf-invoice-combiner/releases) 下载 `combine_pdfs.exe`
+1. 从 [Releases](https://github.com/TAnsz/pdf-invoice-combiner/releases) 下载 `combine_pdfs.exe`
 2. 将 PDF 文件放在一个文件夹中，如 `D:\invoices`
 3. 打开命令行（CMD 或 PowerShell），运行：
    ```
@@ -19,7 +19,7 @@
 1. 确保已安装 Python 3.7+
 2. 克隆项目：
    ```bash
-   git clone https://github.com/your-username/pdf-invoice-combiner.git
+   git clone https://github.com/TAnsz/pdf-invoice-combiner.git
    cd pdf-invoice-combiner
    ```
 3. 安装依赖：
@@ -104,8 +104,8 @@ if (Test-Path $inputDir) {
 ## 获取帮助
 
 - 📖 查看完整 [README.md](README.md)
-- 🐛 报告 Bug: [Issues](https://github.com/your-username/pdf-invoice-combiner/issues)
-- 💬 功能建议: [Discussions](https://github.com/your-username/pdf-invoice-combiner/discussions)
+- 🐛 报告 Bug: [Issues](https://github.com/TAnsz/pdf-invoice-combiner/issues)
+- 💬 功能建议: [Discussions](https://github.com/TAnsz/pdf-invoice-combiner/discussions)
 
 ---
 
