@@ -45,8 +45,10 @@ def main():
                 path.unlink()
     
     print("[*] Building EXE file...")
+    # Use the same Python executable that is running this script
+    python_exe = sys.executable
     cmd = [
-        sys.executable, "-m", "pyinstaller",
+        python_exe, "-m", "PyInstaller",
         "--onefile",  # 单个 EXE 文件
         "--name", "combine_pdfs",  # EXE 名称
         "--icon", "NONE",  # 可选：添加图标
