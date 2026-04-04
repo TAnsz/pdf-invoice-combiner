@@ -30,7 +30,7 @@ jobs:
     - name: Verify script exists
       run: |
         ls -la
-        if exist build_exe.py echo "build_exe.py exists" else echo "build_exe.py not found"
+        if (Test-Path build_exe.py) { Write-Host "build_exe.py exists" } else { Write-Host "build_exe.py not found" }
     
     - name: Build EXE
       run: |
