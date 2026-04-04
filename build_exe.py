@@ -69,7 +69,7 @@ def main():
             print(f"[Error] EXE file not found")
             sys.exit(1)
     else:
-        print(f"❌ 构建失败，返回码: {result.returncode}")
+        print(f"[Error] Build failed with return code: {result.returncode}")
         sys.exit(1)
 
 if __name__ == "__main__":
