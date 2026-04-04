@@ -36,7 +36,7 @@ def main():
     build_dir = script_dir / "build"
     spec_file = script_dir / f"{script_name.replace('.py', '.spec')}"
     
-    print("["*"] Cleaning old files...")
+    print("[*] Cleaning old files...")
     for path in [dist_dir, build_dir, spec_file]:
         if path.exists():
             if path.is_dir():
