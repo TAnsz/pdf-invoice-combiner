@@ -51,7 +51,7 @@ class PDFMergerGUI:
         self.root.resizable(True, True)
 
         # Variables
-        self.input_mode = tk.StringVar(value="folder")  # "folder" or "file"
+        self.input_mode = tk.StringVar(value="files")  # "folder" or "files"
         self.input_path = tk.StringVar()
         self.output_path = tk.StringVar()
         self.pdf_files = []
@@ -77,8 +77,8 @@ class PDFMergerGUI:
         mode_frame.grid(row=0, column=1, sticky=(tk.W, tk.E))
         ttk.Radiobutton(mode_frame, text="文件夹", variable=self.input_mode,
                        value="folder", command=self.on_mode_change).pack(side=tk.LEFT, padx=(0, 20))
-        ttk.Radiobutton(mode_frame, text="单个文件", variable=self.input_mode,
-                       value="file", command=self.on_mode_change).pack(side=tk.LEFT)
+        ttk.Radiobutton(mode_frame, text="多个文件", variable=self.input_mode,
+                       value="files", command=self.on_mode_change).pack(side=tk.LEFT)
 
         # Input path selection
         ttk.Label(input_frame, text="输入路径:").grid(row=1, column=0, sticky=tk.W, padx=(0, 5), pady=5)
@@ -98,11 +98,15 @@ class PDFMergerGUI:
         self.file_listbox = tk.Listbox(list_frame, height=8)
         scrollbar = ttk.Scrollbar(list_frame, orient=tk.VERTICAL, command=self.file_listbox.yview)
         self.file_listbox.configure(yscrollcommand=scrollbar.set)
+        self.file_listbox.bind('<Double-1>', self.remove_selected_file)
 
         self.file_listbox.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
 
-        ttk.Button(list_frame, text="刷新列表", command=self.refresh_file_list).grid(row=1, column=0, pady=(5, 0))
+        button_frame_list = ttk.Frame(list_frame)
+        button_frame_list.grid(row=1, column=0, pady=(5, 0))
+        ttk.Button(button_frame_list, text="刷新列表", command=self.refresh_file_list).pack(side=tk.LEFT, padx=(0, 5))
+        ttk.Button(button_frame_list, text="清空列表", command=self.clear_file_list).pack(side=tk.LEFT)
 
         # Output section
         output_frame = ttk.LabelFrame(main_frame, text="输出设置", padding="5")
@@ -157,22 +161,43 @@ class PDFMergerGUI:
         self.pdf_files = []
         self.file_listbox.delete(0, tk.END)
 
+    def clear_file_list(self):
+        self.pdf_files = []
+        self.file_listbox.delete(0, tk.END)
+        self.input_path.set("")
+        self.log_message("文件列表已清空")
+
+    def remove_selected_file(self, event):
+        selection = self.file_listbox.curselection()
+        if selection:
+            index = selection[0]
+            removed_file = self.pdf_files.pop(index)
+            self.file_listbox.delete(index)
+            self.input_path.set(f"已选择 {len(self.pdf_files)} 个文件")
+            self.log_message(f"已移除文件: {os.path.basename(removed_file)}")
+
     def browse_input(self):
         if self.input_mode.get() == "folder":
             path = filedialog.askdirectory(title="选择输入文件夹")
             if path:
                 self.input_path.set(path)
                 self.refresh_file_list()
-        else:
-            path = filedialog.askopenfilename(
+        else:  # files mode
+            paths = filedialog.askopenfilenames(
                 title="选择 PDF 文件",
                 filetypes=[("PDF files", "*.pdf"), ("All files", "*.*")]
             )
-            if path:
-                self.input_path.set(path)
-                self.pdf_files = [path]
+            if paths:
+                # 添加到现有列表，避免重复
+                new_files = [p for p in paths if p not in self.pdf_files]
+                self.pdf_files.extend(new_files)
+                # 更新显示
+                self.input_path.set(f"已选择 {len(self.pdf_files)} 个文件")
                 self.file_listbox.delete(0, tk.END)
-                self.file_listbox.insert(tk.END, os.path.basename(path))
+                for pdf_file in self.pdf_files:
+                    self.file_listbox.insert(tk.END, os.path.basename(pdf_file))
+                if new_files:
+                    self.log_message(f"添加了 {len(new_files)} 个新文件")
 
     def browse_output(self):
         path = filedialog.asksaveasfilename(
@@ -196,11 +221,7 @@ class PDFMergerGUI:
             except Exception as e:
                 messagebox.showerror("错误", f"无法读取文件夹: {e}")
                 return
-        else:
-            if input_path.lower().endswith('.pdf'):
-                self.pdf_files = [input_path]
-            else:
-                self.pdf_files = []
+        # 对于多个文件模式，文件列表已经设置好了
 
         self.file_listbox.delete(0, tk.END)
         for pdf_file in self.pdf_files:
@@ -294,27 +315,52 @@ class PDFMergerGUI:
 
                     if self.can_merge_pages(page1['effective_rect'], page2['effective_rect']):
                         # Merge two pages
-                        self.merge_two_pages(output_doc, page1, page2)
-                        merged_count += 1
-                        self.log_message(f"合并页面: {os.path.basename(page1['path'])}:{page1['page_num']+1} + {os.path.basename(page2['path'])}:{page2['page_num']+1}")
+                        try:
+                            self.merge_two_pages(output_doc, page1, page2)
+                            merged_count += 1
+                            self.log_message(f"合并页面: {os.path.basename(page1['path'])}:{page1['page_num']+1} + {os.path.basename(page2['path'])}:{page2['page_num']+1}")
+                        except Exception as e:
+                            self.log_message(f"合并页面失败 {os.path.basename(page1['path'])}:{page1['page_num']+1} 和 {os.path.basename(page2['path'])}:{page2['page_num']+1}: {e}")
+                            # Add them separately
+                            try:
+                                self.add_single_page(output_doc, page1)
+                                self.log_message(f"单独添加页面: {os.path.basename(page1['path'])}:{page1['page_num']+1}")
+                            except Exception as e2:
+                                self.log_message(f"添加页面失败 {os.path.basename(page1['path'])}:{page1['page_num']+1}: {e2}")
+                            try:
+                                self.add_single_page(output_doc, page2)
+                                self.log_message(f"单独添加页面: {os.path.basename(page2['path'])}:{page2['page_num']+1}")
+                            except Exception as e2:
+                                self.log_message(f"添加页面失败 {os.path.basename(page2['path'])}:{page2['page_num']+1}: {e2}")
                         i += 2
                     else:
                         # Can't merge, add first page alone
-                        self.add_single_page(output_doc, page1)
-                        self.log_message(f"单独添加页面: {os.path.basename(page1['path'])}:{page1['page_num']+1}")
+                        try:
+                            self.add_single_page(output_doc, page1)
+                            self.log_message(f"单独添加页面: {os.path.basename(page1['path'])}:{page1['page_num']+1}")
+                        except Exception as e:
+                            self.log_message(f"添加页面失败 {os.path.basename(page1['path'])}:{page1['page_num']+1}: {e}")
                         i += 1
                 else:
                     # Last page, add alone
-                    self.add_single_page(output_doc, all_pages[i])
-                    self.log_message(f"单独添加页面: {os.path.basename(all_pages[i]['path'])}:{all_pages[i]['page_num']+1}")
+                    try:
+                        self.add_single_page(output_doc, all_pages[i])
+                        self.log_message(f"单独添加页面: {os.path.basename(all_pages[i]['path'])}:{all_pages[i]['page_num']+1}")
+                    except Exception as e:
+                        self.log_message(f"添加页面失败 {os.path.basename(all_pages[i]['path'])}:{all_pages[i]['page_num']+1}: {e}")
                     i += 1
 
                 self.progress_var.set(30 + (i / total_pages) * 70)
 
             # Save output
             self.status_label.config(text="正在保存文件...")
-            output_doc.save(output_path)
-            output_doc.close()
+            try:
+                output_doc.save(output_path)
+                output_doc.close()
+                self.log_message(f"文件保存成功: {output_path}")
+            except Exception as e:
+                self.log_message(f"保存文件失败: {e}")
+                raise
 
             # Close all input documents
             for page_info in all_pages:
