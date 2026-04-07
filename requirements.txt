@@ -1,5 +1,6 @@
 # 核心依赖
 pymupdf>=1.26.0
 
-# 开发依赖（仅在构建 EXE 时需要）
-# pyinstaller>=5.0
+# GUI 版本依赖（可选）
+# tkinter 通常内置在 Python 中，无需额外安装
+# 如需确保兼容性可添加：tkinter

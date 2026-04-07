@@ -9,7 +9,8 @@
 - 📊 **按高度排序**：相似高度的页面优先配对，最大化合并效率
 - 🎯 **递归搜索**：自动搜索输入目录及所有子目录中的 PDF 文件
 - 💾 **安全输出**：合并前自动删除已存在的输出文件，确保生成最新结果
-- 🚀 **开箱即用**：提供独立 EXE 版本，无需安装 Python
+- �️ **图形界面**：提供直观的 GUI 版本，支持文件选择和进度显示
+- �🚀 **开箱即用**：提供独立 EXE 版本，无需安装 Python
 
 ## 安装
 
@@ -33,13 +34,44 @@ pip install pymupdf
 python combine_pdfs_two_per_a4.py
 ```
 
-### 方式 2：独立 EXE（Windows，无需 Python）
+### 方式 2：图形界面版本（推荐）
 
-从 [Releases](https://github.com/TAnsz/pdf-invoice-combiner/releases) 页面下载最新的 `combine_pdfs.exe`，双击运行或在命令行中使用。
+```bash
+# 安装额外依赖
+pip install pymupdf tkinter
+
+# 运行 GUI 版本
+python combine_pdfs_gui.py
+```
+
+### 方式 3：独立 EXE（Windows，无需 Python）
+
+从 [Releases](https://github.com/TAnsz/pdf-invoice-combiner/releases) 页面下载最新的 `combine_pdfs.exe`，双击运行即可打开图形界面。
 
 ## 使用方法
 
-### 基础用法
+### GUI 版本（推荐）
+
+1. **运行程序**：
+   ```bash
+   python combine_pdfs_gui.py
+   # 或双击下载的 combine_pdfs.exe
+   ```
+
+2. **选择输入**：
+   - 选择"文件夹"模式：浏览并选择包含 PDF 文件的文件夹
+   - 或选择"单个文件"模式：选择特定的 PDF 文件
+
+3. **选择输出**：
+   - 点击"浏览"选择输出 PDF 文件的保存位置
+
+4. **开始合并**：
+   - 点击"开始合并"按钮
+   - 查看进度条和日志了解处理状态
+
+### 命令行版本
+
+#### 基础用法
 
 ```bash
 # 合并当前目录的所有 PDF，输出到 merged.pdf

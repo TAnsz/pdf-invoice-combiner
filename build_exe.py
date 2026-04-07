@@ -25,10 +25,16 @@ if sys.platform == 'win32':
 def main():
     script_dir = Path(__file__).parent
     script_name = "combine_pdfs_two_per_a4.py"
+    gui_script_name = "combine_pdfs_gui.py"
     script_path = script_dir / script_name
+    gui_script_path = script_dir / gui_script_name
     
     if not script_path.exists():
         print(f"[Error] Script not found: {script_name}")
+        sys.exit(1)
+    
+    if not gui_script_path.exists():
+        print(f"[Error] GUI script not found: {gui_script_name}")
         sys.exit(1)
     
     # 清理旧的构建文件
@@ -54,7 +60,12 @@ def main():
         "--icon", "NONE",  # 可选：添加图标
         "--add-data", f"{script_dir}{os.pathsep}.",  # 包含其他文件
         "--collect-all", "fitz",  # 收集 PyMuPDF 的所有依赖
-        str(script_path)
+        "--collect-all", "tkinter",  # 收集 tkinter 的所有依赖
+        "--hidden-import", "tkinter.filedialog",
+        "--hidden-import", "tkinter.messagebox",
+        "--hidden-import", "tkinter.ttk",
+        "--hidden-import", "tkinter.scrolledtext",
+        str(gui_script_path)  # 使用 GUI 版本作为主脚本
     ]
     
     result = subprocess.run(cmd, cwd=script_dir)
@@ -64,9 +75,8 @@ def main():
         if exe_path.exists():
             print(f"\n[OK] EXE file generated successfully: {exe_path}")
             print(f"\n[Info] Usage:")
-            print(f"   combine_pdfs.exe")
-            print(f"   combine_pdfs.exe D:\\invoices")
-            print(f"   combine_pdfs.exe D:\\invoices D:\\output\\merged.pdf")
+            print(f"   Double-click combine_pdfs.exe to open GUI")
+            print(f"   Or run: combine_pdfs.exe")
         else:
             print(f"[Error] EXE file not found")
             sys.exit(1)
