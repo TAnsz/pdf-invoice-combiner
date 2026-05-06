@@ -313,7 +313,7 @@ class PDFMergerGUI:
                     page1 = all_pages[i]
                     page2 = all_pages[i + 1]
 
-                    if self.can_merge_pages(page1['effective_rect'], page2['effective_rect']):
+                    if self.can_merge_pages(page1['rect'], page2['rect']):
                         # Merge two pages
                         try:
                             self.merge_two_pages(output_doc, page1, page2)
@@ -427,46 +427,48 @@ class PDFMergerGUI:
         return fitz.Rect(0, 0, A4_WIDTH - MARGIN_LEFT - MARGIN_RIGHT, height)
 
     def can_merge_pages(self, rect1, rect2):
-        """Check if two pages can be merged into one A4 page."""
-        total_height = rect1.height + rect2.height + MARGIN_TOP + MARGIN_BOTTOM
-        return total_height <= MERGE_THRESHOLD
+        """Check if two pages can be merged into one A4 page by joint scaling."""
+        max_w = A4_WIDTH - MARGIN_LEFT - MARGIN_RIGHT
+        max_half_h = (A4_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM) / 2
+
+        if rect1.width <= 0 or rect1.height <= 0 or rect2.width <= 0 or rect2.height <= 0:
+            return False
+
+        pair_scale = min(
+            max_w / rect1.width, max_w / rect2.width,
+            max_half_h / rect1.height, max_half_h / rect2.height
+        )
+        return pair_scale > 0
 
     def merge_two_pages(self, output_doc, page1_info, page2_info):
         """Merge two pages into one A4 page."""
         page = output_doc.new_page(width=A4_WIDTH, height=A4_HEIGHT)
 
-        # Calculate available height for each page
-        available_height = (A4_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM) / 2
+        max_w = A4_WIDTH - MARGIN_LEFT - MARGIN_RIGHT
+        max_half_h = (A4_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM) / 2
 
-        # Page 1
         rect1 = page1_info['rect']
-        scale1 = min(
-            (A4_WIDTH - MARGIN_LEFT - MARGIN_RIGHT) / rect1.width,
-            available_height / rect1.height
+        rect2 = page2_info['rect']
+        pair_scale = min(
+            max_w / rect1.width, max_w / rect2.width,
+            max_half_h / rect1.height, max_half_h / rect2.height
         )
-        scaled_width1 = rect1.width * scale1
-        scaled_height1 = rect1.height * scale1
 
-        x1 = (A4_WIDTH - scaled_width1) / 2
+        # Page 1 (top half)
+        drawn_w1 = rect1.width * pair_scale
+        drawn_h1 = rect1.height * pair_scale
+        x1 = MARGIN_LEFT + (max_w - drawn_w1) / 2
         y1 = MARGIN_TOP
-
-        page.show_pdf_page(fitz.Rect(x1, y1, x1 + scaled_width1, y1 + scaled_height1),
+        page.show_pdf_page(fitz.Rect(x1, y1, x1 + drawn_w1, y1 + drawn_h1),
                           page1_info['doc'], page1_info['page_num'],
                           clip=rect1)
 
-        # Page 2
-        rect2 = page2_info['rect']
-        scale2 = min(
-            (A4_WIDTH - MARGIN_LEFT - MARGIN_RIGHT) / rect2.width,
-            available_height / rect2.height
-        )
-        scaled_width2 = rect2.width * scale2
-        scaled_height2 = rect2.height * scale2
-
-        x2 = (A4_WIDTH - scaled_width2) / 2
-        y2 = A4_HEIGHT / 2 + MARGIN_TOP
-
-        page.show_pdf_page(fitz.Rect(x2, y2, x2 + scaled_width2, y2 + scaled_height2),
+        # Page 2 (bottom half)
+        drawn_w2 = rect2.width * pair_scale
+        drawn_h2 = rect2.height * pair_scale
+        x2 = MARGIN_LEFT + (max_w - drawn_w2) / 2
+        y2 = (A4_HEIGHT / 2) + MARGIN_TOP
+        page.show_pdf_page(fitz.Rect(x2, y2, x2 + drawn_w2, y2 + drawn_h2),
                           page2_info['doc'], page2_info['page_num'],
                           clip=rect2)
 
